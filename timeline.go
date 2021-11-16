@@ -279,19 +279,21 @@ func (timeline *timeline) parseTweets() ([]*Tweet, string) {
 }
 
 func (timeline *timeline) parseUsers() ([]*Profile, string) {
-	users := make(map[string]Profile)
+	// users := make(map[string]Profile)
+	var users []*Profile
 
-	for id, user := range timeline.GlobalObjects.Users {
-		users[id] = parseProfile(user)
+	for _, user := range timeline.GlobalObjects.Users {
+		// users[id] = parseProfile(user)
+		profile := parseProfile(user)
+		users = append(users, &profile)
 	}
-
 	var cursor string
-	var orderedProfiles []*Profile
+	//var orderedProfiles []*Profile
 	for _, instruction := range timeline.Timeline.Instructions {
 		for _, entry := range instruction.AddEntries.Entries {
-			if profile, ok := users[entry.Content.Item.Content.User.ID]; ok {
-				orderedProfiles = append(orderedProfiles, &profile)
-			}
+			// 	if profile, ok := users[entry.Content.Item.Content.User.ID]; ok {
+			// 		orderedProfiles = append(orderedProfiles, &profile)
+			// 	}
 			if entry.Content.Operation.Cursor.CursorType == "Bottom" {
 				cursor = entry.Content.Operation.Cursor.Value
 			}
@@ -300,5 +302,6 @@ func (timeline *timeline) parseUsers() ([]*Profile, string) {
 			cursor = instruction.ReplaceEntry.Entry.Content.Operation.Cursor.Value
 		}
 	}
-	return orderedProfiles, cursor
+
+	return users, cursor
 }

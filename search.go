@@ -84,6 +84,7 @@ func (s *Scraper) FetchSearchProfiles(query string, maxProfilesNbr int, cursor s
 	if err != nil {
 		return nil, "", err
 	}
+	//fmt.Println(len(timeline.GlobalObjects.Users))
 	users, nextCursor := timeline.parseUsers()
 	return users, nextCursor, nil
 }
